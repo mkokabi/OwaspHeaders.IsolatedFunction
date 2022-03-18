@@ -4,6 +4,14 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <Title>OwaspHeaders.IsolatedFunction</Title>
+        <Authors>Mohsen Kokabi</Authors>
+        <Description>A .NET Core middleware for injecting the Owasp recommended HTTP Headers into Azure Isolated Functions</Description>
+        <PackageProjectUrl>https://github.com/mkokabi/OwaspHeaders.IsolatedFunction</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/mkokabi/OwaspHeaders.IsolatedFunction/blob/main/LICENSE</PackageLicenseUrl>
+        <PackageIconUrl> </PackageIconUrl>
+        <RepositoryUrl>https://github.com/mkokabi/OwaspHeaders.IsolatedFunction</RepositoryUrl>
+        <PackageTags>owasp</PackageTags>
     </PropertyGroup>
 
     <ItemGroup>

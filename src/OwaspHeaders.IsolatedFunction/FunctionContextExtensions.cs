@@ -22,7 +22,7 @@ public static class FunctionContextExtensions
             var inputData =
                 type?.GetProperties().Single(p => p.Name is "InputData").GetValue(functionBindingsFeature) as
                     IReadOnlyDictionary<string, object>;
-            return inputData?.Values.SingleOrDefault(o => o is HttpRequestData) as HttpRequestData;
+            return inputData?.Values.SingleOrDefault(o => o is HttpRequestData) as HttpRequestData ?? throw new InvalidOperationException();
         }
         catch (Exception ex)
         {

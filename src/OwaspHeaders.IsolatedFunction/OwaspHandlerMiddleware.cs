@@ -91,8 +91,8 @@ public class OwaspHandlerMiddleware: IFunctionsWorkerMiddleware
             TryRemoveHeader(response.Headers, Constants.ServerHeaderName);
         }
     }
-    
-    public bool TryRemoveHeader(HttpHeadersCollection headersCollection, string headerName)
+
+    private bool TryRemoveHeader(HttpHeadersCollection headersCollection, string headerName)
     {
         if (!headersCollection.Contains(headerName))
             return true;
