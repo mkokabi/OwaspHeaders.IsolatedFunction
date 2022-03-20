@@ -25,5 +25,21 @@ var host = new HostBuilder()
 ```
 
 ## Configuration
+Without any configuration the above single line would add following headers:
+
+| Config                              | Output                               |
+|-------------------------------------|--------------------------------------|
+| UseHsts                             | Strict-Transport-Security            |
+| UseXFrameOptions                    | X-Frame-Options                      |
+| UseXssProtection                    | X-XSS-Protection                     |
+| UseXContentTypeOptions              | X-Content-Type-Options               |
+| UseContentSecurityPolicyReportOnly  | Content-Security-Policy-Report-Only  |
+| UseContentSecurityPolicy            | Content-Security-Policy              |
+| UseXContentSecurityPolicy           | X-Content-Security-Policy            |
+| UseExpectCt                         | Expect-CT                            |
+
+
 The configuration is based on the original project. 
-So please find the coniguration [here](https://github.com/GaProgMan/OwaspHeaders.Core/blob/master/README.md#configuration)
+So please find the coniguration details [here](https://github.com/GaProgMan/OwaspHeaders.Core/blob/master/README.md#configuration)
+
+![](images/Screen Shot 2022-03-21 at 6.31.17 am.png)
