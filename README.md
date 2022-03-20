@@ -3,6 +3,9 @@ A .NET Core middleware for injecting the Owasp recommended HTTP Headers into Azu
 
 ![](images/OwaspAzureFuncIcon.png)
 
+## Build and unit tests status
+[![.NET](https://github.com/mkokabi/OwaspHeaders.IsolatedFunction/actions/workflows/tests.yml/badge.svg)](https://github.com/mkokabi/OwaspHeaders.IsolatedFunction/actions/workflows/tests.yml)
+
 ## NuGet Package
 The nuget package can be accessed [here](https://www.nuget.org/packages/OwaspHeaders.IsolatedFunction/1.1.0)
 
