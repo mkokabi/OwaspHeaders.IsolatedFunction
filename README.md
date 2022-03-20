@@ -42,4 +42,4 @@ Without any configuration the above single line would add following headers:
 The configuration is based on the original project. 
 So please find the coniguration details [here](https://github.com/GaProgMan/OwaspHeaders.Core/blob/master/README.md#configuration)
 
-![](images/Screen Shot 2022-03-21 at 6.31.17 am.png)
+![](images/Screenshot.png)
