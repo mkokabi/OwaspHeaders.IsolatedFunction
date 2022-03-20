@@ -1,0 +1,5 @@
+namespace TestProject;
+
+interface IFunctionBindingsFeature
+{
+}

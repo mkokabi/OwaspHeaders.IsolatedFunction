@@ -44,12 +44,12 @@ public class OwaspHandlerMiddlewareTests
         var list = new List<KeyValuePair<Type, object>>();
         list.Add(new KeyValuePair<Type, Object>(typeof(IFunctionBindingsFeature), value));
         
-        var invocationFeatures = new Mock<IInvocationFeatures>();
-        invocationFeatures.Setup(x => x.GetEnumerator())
+        var mockInvocationFeatures = new Mock<IInvocationFeatures>();
+        mockInvocationFeatures.Setup(x => x.GetEnumerator())
             .Returns(list.GetEnumerator());
         
         mockFunctionContext.Setup(ctx => ctx.Features)
-            .Returns(invocationFeatures.Object);
+            .Returns(mockInvocationFeatures.Object);
         var owaspHandlerMiddleware = new OwaspHandlerMiddleware();
 
         var mockFunctionExecutionDelegate = new Mock<FunctionExecutionDelegate>();
