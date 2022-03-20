@@ -6,22 +6,34 @@ A .NET Core middleware for injecting the Owasp recommended HTTP Headers into Azu
 ## Build and unit tests status
 [![.NET](https://github.com/mkokabi/OwaspHeaders.IsolatedFunction/actions/workflows/tests.yml/badge.svg)](https://github.com/mkokabi/OwaspHeaders.IsolatedFunction/actions/workflows/tests.yml)
 
+## License
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## NuGet Package
 The nuget package can be accessed [here](https://www.nuget.org/packages/OwaspHeaders.IsolatedFunction/1.1.0)
 
 ## Story
-The first thing is a big thank to GaProgMan for creating [OwaspHeaders.Core](https://github.com/GaProgMan/OwaspHeaders.Core)
+### Issue
+The Azure Function Isolate is not completely the same as DotNet Core Middleware so the normal solutions won't work.
+Therefore, the need came for a project like this.
+
+
+First of all a big thank to GaProgMan for creating [OwaspHeaders.Core](https://github.com/GaProgMan/OwaspHeaders.Core)
 This library is just an extension to his work to support Azure Isolated 
 function.
 
 ## Usage
 ```c#
-IConfigurationRoot _configuration = null;
-var host = new HostBuilder()
-   .ConfigureFunctionsWorkerDefaults(builder =>
-   {
-      builder.UseMiddleware<OwaspHandlerMiddleware>();
-   })
+using OwaspHeaders.IsolatedFunction;
+public class Program
+{
+    public static void Main()
+    {
+      var host = new HostBuilder()
+         .ConfigureFunctionsWorkerDefaults(builder =>
+         {
+            builder.UseMiddleware<OwaspHandlerMiddleware>();
+         })
 ```
 
 ## Configuration
