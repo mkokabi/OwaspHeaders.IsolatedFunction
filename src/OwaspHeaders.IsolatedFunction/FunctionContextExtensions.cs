@@ -70,7 +70,13 @@ public static class FunctionContextExtensions
             object functionBindingsFeature = functionContext.GetIFunctionBindingsFeature(logger);
             Type type = functionBindingsFeature.GetType();
             PropertyInfo pinfo = type?.GetProperties().Single(p => p.Name is "InvocationResult");
-            return pinfo?.GetValue(functionBindingsFeature) as HttpResponseData;
+            var result = pinfo?.GetValue(functionBindingsFeature) as HttpResponseData;
+            if (result != null)
+            {
+                return result;
+            }
+            pinfo = type?.GetProperties().Single(p => p.Name is "OutputBindingData");
+            return (pinfo?.GetValue(functionBindingsFeature) as Dictionary<string, object>)["HttpResponse"] as HttpResponseData;
         }
         catch (Exception ex)
         {
