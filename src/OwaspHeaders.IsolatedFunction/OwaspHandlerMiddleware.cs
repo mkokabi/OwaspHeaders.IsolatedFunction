@@ -2,6 +2,7 @@
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
 using OwaspHeaders.Core;
 using OwaspHeaders.Core.Extensions;
@@ -16,10 +17,19 @@ public class OwaspHandlerMiddleware: IFunctionsWorkerMiddleware
         await next(context);
         
         ILogger<OwaspHandlerMiddleware> logger = context.GetLogger<OwaspHandlerMiddleware>();
+
+        if (logger == null)
+        {
+            logger = new NullLogger<OwaspHandlerMiddleware>();
+        }
         
         var config = SecureHeadersMiddlewareExtensions.BuildDefaultConfiguration();
 
         var response = FunctionContextExtensions.GetHttpResponseData(context, logger);
+        if (response == null)
+        {
+            throw new InvalidOperationException("response is null");
+        }
 
         if (config == null)
         {

@@ -13,8 +13,8 @@
         <PackageTags>owasp azure function isolated</PackageTags>
         <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
         <PackageIcon>OwaspAzureFuncIcon.png</PackageIcon>
-        <AssemblyVersion>1.1.0.0</AssemblyVersion>
-        <PackageVersion>1.1.0</PackageVersion>
+        <AssemblyVersion>1.2.0.0</AssemblyVersion>
+        <PackageVersion>1.2.0</PackageVersion>
     </PropertyGroup>
 
     <ItemGroup>
