@@ -62,26 +62,43 @@ public static class FunctionContextExtensions
     /// </summary>
     /// <param name="functionContext"></param>
     /// <param name="response"></param>
-    public static HttpResponseData GetHttpResponseData(this FunctionContext functionContext,
+    public static HttpResponseData? GetHttpResponseData(this FunctionContext functionContext,
         ILogger<OwaspHandlerMiddleware> logger)
     {
+        PropertyInfo? pinfo = null;
         try
         {
             object functionBindingsFeature = functionContext.GetIFunctionBindingsFeature(logger);
             Type type = functionBindingsFeature.GetType();
-            PropertyInfo pinfo = type?.GetProperties().Single(p => p.Name is "InvocationResult");
+            pinfo = type?.GetProperties().Single(p => p.Name is "InvocationResult");
             var result = pinfo?.GetValue(functionBindingsFeature) as HttpResponseData;
             if (result != null)
             {
                 return result;
             }
             pinfo = type?.GetProperties().Single(p => p.Name is "OutputBindingData");
-            return (pinfo?.GetValue(functionBindingsFeature) as Dictionary<string, object>)["HttpResponse"] as HttpResponseData;
+            var functionBindingsFeatureDictionary = pinfo?.GetValue(functionBindingsFeature) as Dictionary<string, object>;
+            object? httpResponseDataObject;
+            if (functionBindingsFeatureDictionary == null)
+            {
+                logger.LogWarning("functionBindingsFeatureDictionary is null");
+                return null;
+            }
+            if (functionBindingsFeatureDictionary.TryGetValue("HttpResponse", out httpResponseDataObject))
+            {
+                HttpResponseData? httpResponseData = httpResponseDataObject as HttpResponseData;
+                if (httpResponseData != null)
+                {
+                    return httpResponseData;
+                }
+            }
+            logger.LogWarning("functionBindingsFeatureDictionary does not contain HttpResponse");
+            return null;
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.Message);
-            throw ex;
+            logger.LogWarning(ex, "pinfo {pinfo}", pinfo);
+            return null;
         }
     }
 

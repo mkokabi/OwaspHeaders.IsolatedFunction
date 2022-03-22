@@ -28,7 +28,8 @@ public class OwaspHandlerMiddleware: IFunctionsWorkerMiddleware
         var response = FunctionContextExtensions.GetHttpResponseData(context, logger);
         if (response == null)
         {
-            throw new InvalidOperationException("response is null");
+            logger.LogWarning("response is null");
+            return;
         }
 
         if (config == null)
