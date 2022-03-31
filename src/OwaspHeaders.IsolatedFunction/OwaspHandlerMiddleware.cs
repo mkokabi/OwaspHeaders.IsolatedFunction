@@ -1,9 +1,9 @@
 ﻿using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Azure.Functions.Worker.Middleware;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
-using Microsoft.Extensions.Primitives;
 using OwaspHeaders.Core;
 using OwaspHeaders.Core.Extensions;
 using OwaspHeaders.Core.Models;
@@ -22,8 +22,14 @@ public class OwaspHandlerMiddleware: IFunctionsWorkerMiddleware
         {
             logger = new NullLogger<OwaspHandlerMiddleware>();
         }
-        
-        var config = SecureHeadersMiddlewareExtensions.BuildDefaultConfiguration();
+
+        var customConfigProvider = context.InstanceServices.GetService<IOwaspMiddlewareConfigurationProvider>();
+        SecureHeadersMiddlewareConfiguration? customConfig = null;
+        if (customConfigProvider != null)
+        {
+            customConfig = customConfigProvider.CustomConfiguration();
+        }
+        var config = customConfig ?? SecureHeadersMiddlewareExtensions.BuildDefaultConfiguration();
 
         var response = FunctionContextExtensions.GetHttpResponseData(context, logger);
         if (response == null)
@@ -112,7 +118,7 @@ public class OwaspHandlerMiddleware: IFunctionsWorkerMiddleware
             headersCollection.Remove(headerName);
             return true;
         }
-        catch (ArgumentException ex)
+        catch (ArgumentException)
         {
             return false;
         }

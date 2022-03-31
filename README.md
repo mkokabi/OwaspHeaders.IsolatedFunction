@@ -51,7 +51,28 @@ Without any configuration the above single line would add following headers:
 | UseExpectCt                         | Expect-CT                            |
 
 
-The configuration is based on the original project. 
-So please find the coniguration details [here](https://github.com/GaProgMan/OwaspHeaders.Core/blob/master/README.md#configuration)
+The configuration values are based on the original project, however, because Azure middleware doesn't accept parameter, the
+configuration provider should be registered.
+```c#
+services.AddSingleton<IOwaspMiddlewareConfigurationProvider, CustomConfigurationProviderProvider>();
+```
+and the configuration provider should be like:
+```c#
+public class CustomConfigurationProviderProvider : IOwaspMiddlewareConfigurationProvider
+{
+    public SecureHeadersMiddlewareConfiguration CustomConfiguration()
+    {
+        return SecureHeadersMiddlewareBuilder
+            .CreateBuilder()
+            .UseHsts(1200, false)
+            .UseXSSProtection(XssMode.oneReport, "https://reporturi.com/some-report-url")
+            .UseContentDefaultSecurityPolicy()
+            .UsePermittedCrossDomainPolicies(XPermittedCrossDomainOptionValue.masterOnly)
+            .UseReferrerPolicy(ReferrerPolicyOptions.sameOrigin)
+            .Build();
+    }
+}
+```
+To find the details of `SecureHeadersMiddlewareConfiguration` find the details [here](https://github.com/GaProgMan/OwaspHeaders.Core/blob/master/README.md#configuration)
 
 ![](images/Screenshot.png)
