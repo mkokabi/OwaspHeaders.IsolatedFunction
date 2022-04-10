@@ -96,6 +96,12 @@ public class OwaspHandlerMiddleware: IFunctionsWorkerMiddleware
                 config.ReferrerPolicy.BuildHeaderValue());
         }
 
+        if (config.UseCacheControl)
+        {
+            response.Headers.TryAddWithoutValidation(Constants.CacheControlHeaderName,
+                config.CacheControl.BuildHeaderValue());
+        }
+        
         if (config.UseExpectCt)
         {
             response.Headers.TryAddWithoutValidation(Constants.ExpectCtHeaderName,
