@@ -7,6 +7,7 @@ using Microsoft.Azure.Functions.Worker.Middleware;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
+using OwaspHeaders.Core;
 using OwaspHeaders.IsolatedFunction;
 using Xunit;
 
@@ -25,7 +26,7 @@ public class OwaspHandlerMiddlewareTests
         var mockLoggerFactory = new Mock<ILoggerFactory>();
         mockLoggerFactory.Setup(m => m.CreateLogger(It.IsAny<string>()))
             .Returns(new NullLogger<OwaspHandlerMiddleware>());
-        
+
         var mockServiceProvide = new Mock<IServiceProvider>();
         mockServiceProvide.Setup(m => m.GetService(typeof(ILoggerFactory)))
             .Returns(mockLoggerFactory.Object);
@@ -43,11 +44,11 @@ public class OwaspHandlerMiddlewareTests
         };
         var list = new List<KeyValuePair<Type, object>>();
         list.Add(new KeyValuePair<Type, Object>(typeof(IFunctionBindingsFeature), value));
-        
+
         var mockInvocationFeatures = new Mock<IInvocationFeatures>();
         mockInvocationFeatures.Setup(x => x.GetEnumerator())
             .Returns(list.GetEnumerator());
-        
+
         mockFunctionContext.Setup(ctx => ctx.Features)
             .Returns(mockInvocationFeatures.Object);
         var owaspHandlerMiddleware = new OwaspHandlerMiddleware();
@@ -56,7 +57,20 @@ public class OwaspHandlerMiddlewareTests
         var functionExecutionDelegate = new FunctionExecutionDelegate(mockFunctionExecutionDelegate.Object);
 
         owaspHandlerMiddleware.Invoke(mockFunctionContext.Object, functionExecutionDelegate);
-        
-        Assert.Equal(7, httpHeadersCollection.Count());
+
+        Assert.Equal(8, httpHeadersCollection.Count());
+        var expectedHeaders = new List<string>(new[]
+        {
+            Constants.StrictTransportSecurityHeaderName,
+            Constants.XFrameOptionsHeaderName,
+            Constants.XContentTypeOptionsHeaderName,
+            Constants.ContentSecurityPolicyHeaderName,
+            Constants.PermittedCrossDomainPoliciesHeaderName,
+            Constants.ReferrerPolicyHeaderName,
+            Constants.CacheControlHeaderName,
+            Constants.ExpectCtHeaderName
+        });
+        Assert.True(expectedHeaders.TrueForAll(header =>
+            httpHeadersCollection.Contains(header)));
     }
 }
