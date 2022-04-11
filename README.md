@@ -58,7 +58,7 @@ services.AddSingleton<IOwaspMiddlewareConfigurationProvider, CustomConfiguration
 ```
 and the configuration provider should be like:
 ```c#
-public class CustomConfigurationProviderProvider : IOwaspMiddlewareConfigurationProvider
+public class CustomConfigurationProvider : IOwaspMiddlewareConfigurationProvider
 {
     public SecureHeadersMiddlewareConfiguration CustomConfiguration()
     {

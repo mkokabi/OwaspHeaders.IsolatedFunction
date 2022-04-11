@@ -12,13 +12,13 @@ var host = new HostBuilder()
     })
     .ConfigureServices((context, services) =>
     {
-        services.AddSingleton<IOwaspMiddlewareConfigurationProvider, CustomConfigurationProviderProvider>();
+        services.AddSingleton<IOwaspMiddlewareConfigurationProvider, CustomConfigurationProvider>();
     })
     .Build();
 
 host.Run();
 
-public class CustomConfigurationProviderProvider : IOwaspMiddlewareConfigurationProvider
+public class CustomConfigurationProvider : IOwaspMiddlewareConfigurationProvider
 {
     public SecureHeadersMiddlewareConfiguration CustomConfiguration()
     {
