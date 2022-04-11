@@ -39,17 +39,17 @@ public class Program
 ## Configuration
 Without any configuration the above single line would add following headers:
 
-| Config                              | Output                               |
-|-------------------------------------|--------------------------------------|
-| UseHsts                             | Strict-Transport-Security            |
-| UseXFrameOptions                    | X-Frame-Options                      |
-| UseXssProtection                    | X-XSS-Protection                     |
-| UseXContentTypeOptions              | X-Content-Type-Options               |
-| UseContentSecurityPolicyReportOnly  | Content-Security-Policy-Report-Only  |
-| UseContentSecurityPolicy            | Content-Security-Policy              |
-| UseXContentSecurityPolicy           | X-Content-Security-Policy            |
-| UseExpectCt                         | Expect-CT                            |
-
+| Config                             | Output                               |
+|------------------------------------|--------------------------------------|
+| UseHsts                            | Strict-Transport-Security            |
+| UseXFrameOptions                   | X-Frame-Options                      |
+| UseXssProtection                   | X-XSS-Protection                     |
+| UseXContentTypeOptions             | X-Content-Type-Options               |
+| UseContentSecurityPolicyReportOnly | Content-Security-Policy-Report-Only  |
+| UseContentSecurityPolicy           | Content-Security-Policy              |
+| UseXContentSecurityPolicy          | X-Content-Security-Policy            |
+| UseExpectCt                        | Expect-CT                            |
+| UseCacheControl                    | Cache-Control                        |
 
 The configuration values are based on the original project, however, because Azure middleware doesn't accept parameter, the
 configuration provider should be registered.
@@ -67,6 +67,7 @@ public class CustomConfigurationProviderProvider : IOwaspMiddlewareConfiguration
             .UseHsts(1200, false)
             .UseXSSProtection(XssMode.oneReport, "https://reporturi.com/some-report-url")
             .UseContentDefaultSecurityPolicy()
+            .UseCacheControl(false, maxAge: (int)TimeSpan.FromHours(1).TotalSeconds)
             .UsePermittedCrossDomainPolicies(XPermittedCrossDomainOptionValue.masterOnly)
             .UseReferrerPolicy(ReferrerPolicyOptions.sameOrigin)
             .Build();
@@ -75,4 +76,13 @@ public class CustomConfigurationProviderProvider : IOwaspMiddlewareConfiguration
 ```
 To find the details of `SecureHeadersMiddlewareConfiguration` find the details [here](https://github.com/GaProgMan/OwaspHeaders.Core/blob/master/README.md#configuration)
 
+Follwoing screenshot is from the default configuration.
 ![](images/Screenshot.png)
+
+## Swagger note
+Please note that swagger UI would stop with the default configuration. 
+It's because Swagger UI is having mixed content. 
+So to fix this it needs custom configuarion and mixed content should be allowed:
+```c#
+.UseContentSecurityPolicy(blockAllMixedContent: false)
+```
