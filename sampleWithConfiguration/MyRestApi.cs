@@ -1,6 +1,7 @@
 using System.Net;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Azure.WebJobs.Extensions.OpenApi.Core.Attributes;
 using Microsoft.Extensions.Logging;
 
 namespace OwaspHeader.Sample
@@ -15,6 +16,11 @@ namespace OwaspHeader.Sample
         }
 
         [Function("MyRestApi")]
+        [OpenApiOperation(operationId: "Run", tags: new[] {"Sample"})]
+        [OpenApiRequestBody(contentType: "application/json", bodyType: typeof(string))]
+        [OpenApiResponseWithBody(statusCode: HttpStatusCode.Created, contentType: "application/json",
+            bodyType: typeof(string),
+            Description = "The OK response")]
         public HttpResponseData Run([HttpTrigger(AuthorizationLevel.Function, "get", "post")] HttpRequestData req)
         {
             _logger.LogInformation("C# HTTP trigger function processed a request.");

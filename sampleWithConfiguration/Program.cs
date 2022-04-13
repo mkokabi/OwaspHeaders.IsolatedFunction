@@ -1,3 +1,4 @@
+using Microsoft.Azure.Functions.Worker.Extensions.OpenApi.Extensions;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using OwaspHeaders.Core.Enums;
@@ -10,6 +11,7 @@ var host = new HostBuilder()
     {
         builder.UseMiddleware<OwaspHandlerMiddleware>();
     })
+    .ConfigureOpenApi()
     .ConfigureServices((context, services) =>
     {
         services.AddSingleton<IOwaspMiddlewareConfigurationProvider, CustomConfigurationProvider>();
@@ -22,15 +24,25 @@ public class CustomConfigurationProvider : IOwaspMiddlewareConfigurationProvider
 {
     public SecureHeadersMiddlewareConfiguration CustomConfiguration()
     {
-        return SecureHeadersMiddlewareBuilder
+        var configurationBuilder = SecureHeadersMiddlewareBuilder
             .CreateBuilder()
-            .UseHsts(1200, false)
-            .UseXSSProtection(XssMode.oneReport, "https://reporturi.com/some-report-url")
+            .UseHsts((int)TimeSpan.FromDays(365).TotalSeconds, false)
+            .UseXSSProtection(XssMode.oneBlock)
             // .UseContentDefaultSecurityPolicy()
             .UseContentSecurityPolicy(blockAllMixedContent: false)
+            .UseXFrameOptions()
+            .UseContentTypeOptions()
             .UseCacheControl(false, maxAge: (int)TimeSpan.FromHours(1).TotalSeconds)
             .UsePermittedCrossDomainPolicies(XPermittedCrossDomainOptionValue.masterOnly)
-            .UseReferrerPolicy(ReferrerPolicyOptions.sameOrigin)
-            .Build();
+            .UseReferrerPolicy(ReferrerPolicyOptions.sameOrigin);
+        configurationBuilder.ContentSecurityPolicyConfiguration.ObjectSrc.Add(new ContentSecurityPolicyElement
+        {
+            DirectiveOrUri = "unsafe-inline"
+        });
+        configurationBuilder.ContentSecurityPolicyConfiguration.ScriptSrc.Add(new ContentSecurityPolicyElement
+        {
+            DirectiveOrUri = "unsafe-inline"
+        });
+        return configurationBuilder.Build();
     }
 }
