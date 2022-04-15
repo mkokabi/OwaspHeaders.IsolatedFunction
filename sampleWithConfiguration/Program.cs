@@ -35,14 +35,16 @@ public class CustomConfigurationProvider : IOwaspMiddlewareConfigurationProvider
             .UseCacheControl(false, maxAge: (int)TimeSpan.FromHours(1).TotalSeconds)
             .UsePermittedCrossDomainPolicies(XPermittedCrossDomainOptionValue.masterOnly)
             .UseReferrerPolicy(ReferrerPolicyOptions.sameOrigin);
-        configurationBuilder.ContentSecurityPolicyConfiguration.ObjectSrc.Add(new ContentSecurityPolicyElement
+        configurationBuilder.ContentSecurityPolicyConfiguration.FrameAncestors.Add(new ContentSecurityPolicyElement
         {
-            DirectiveOrUri = "unsafe-inline"
+            DirectiveOrUri = "none"
         });
-        configurationBuilder.ContentSecurityPolicyConfiguration.ScriptSrc.Add(new ContentSecurityPolicyElement
+        configurationBuilder.ContentSecurityPolicyConfiguration.FormAction.Add(new ContentSecurityPolicyElement
         {
-            DirectiveOrUri = "unsafe-inline"
+            DirectiveOrUri = "self"
         });
+        configurationBuilder.ContentSecurityPolicyConfiguration.UpgradeInsecureRequests = true;
+        configurationBuilder.ContentSecurityPolicyConfiguration.BlockAllMixedContent = true;
         return configurationBuilder.Build();
     }
 }

@@ -86,3 +86,16 @@ So to fix this it needs custom configuarion and mixed content should be allowed:
 ```c#
 .UseContentSecurityPolicy(blockAllMixedContent: false)
 ```
+or 
+```c#
+configurationBuilder.ContentSecurityPolicyConfiguration.FrameAncestors.Add(new ContentSecurityPolicyElement
+{
+    DirectiveOrUri = "none"
+});
+configurationBuilder.ContentSecurityPolicyConfiguration.FormAction.Add(new ContentSecurityPolicyElement
+{
+    DirectiveOrUri = "self"
+});
+configurationBuilder.ContentSecurityPolicyConfiguration.UpgradeInsecureRequests = true;
+configurationBuilder.ContentSecurityPolicyConfiguration.BlockAllMixedContent = true;
+```
