@@ -43,6 +43,14 @@ public class CustomConfigurationProvider : IOwaspMiddlewareConfigurationProvider
         {
             DirectiveOrUri = "self"
         });
+        configurationBuilder.ContentSecurityPolicyConfiguration.DefaultSrc.Add(new ContentSecurityPolicyElement
+        {
+            DirectiveOrUri = "none"
+        });
+        configurationBuilder.ContentSecurityPolicyConfiguration.ObjectSrc.Add(new ContentSecurityPolicyElement
+        {
+            DirectiveOrUri = "none"
+        });
         configurationBuilder.ContentSecurityPolicyConfiguration.UpgradeInsecureRequests = true;
         configurationBuilder.ContentSecurityPolicyConfiguration.BlockAllMixedContent = true;
         return configurationBuilder.Build();
